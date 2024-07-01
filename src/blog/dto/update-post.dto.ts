@@ -27,7 +27,7 @@ export class UpdatePost {
     // @ArrayMaxSize(5)
     // category: string[];
 
-    @IsDate()
-    @Type(() => Date)
-    updatedAt?: Date;
+    // @IsDate()
+    // @Type(() => Date)
+    // updatedAt?: Date;
 }

@@ -22,18 +22,23 @@ export class BlogController {
         return this.blogService.getPost();
     }
 
+    @Get('/byid/:id')
+    getPostById(@Param('id') id: string) {
+        return this.blogService.getPostById(id);
+    }
+
     @Post()
     CreatePost(@Body() post: CreatePost) {
         return this.blogService.createPost(post);
     }
 
-    @Patch()
+    @Patch(':id')
     updatePost(@Param('id') id:string, @Body() post: CreatePost){
         return this.blogService.updatePost(id, post);
     }
 
     @Delete(':id') 
-    deletePost(@Param('id') id: string) {
-        return this.blogService.deletePost(id);
+    async deletePost(@Param('id') id: string):Promise<{deleted: boolean}> {
+        return await this.blogService.deletePost(id);
     }
 }
