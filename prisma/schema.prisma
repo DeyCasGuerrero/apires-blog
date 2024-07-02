@@ -13,25 +13,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Profile {
+  idProfile   Int    @id @default(autoincrement())
+  description String
+
+  user      User   @relation(fields: [userEmail], references: [email])
+  userEmail String @unique
+}
+
 model User {
   idUser String @id @default(cuid())
-  email String @unique
-  name String 
+  email  String @unique
+  name   String
+
+  profile Profile?
+  Blog    Blog[]
 }
 
 model Blog {
-  idBlog String @id @default(cuid())
-  title String 
-  content String
+  idBlog    String    @id @default(cuid())
+  title     String
+  content   String
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
-  // categories Category[]
+
+  author      User   @relation(fields: [authorEmail], references: [email])
+  authorEmail String
+
+  category Category[] // relación implícita
 }
 
-
-model Category{
-  idCategory Int @id @default(autoincrement())
-  name String
-  // posts Blog[]
+model Category {
+  idCategory Int    @id @default(autoincrement())
+  name       String
+  blog       Blog[] // relación implícita
 }
 
+//relación explicita
+
+// model BlogOnCategory {
+//   blogId     String   @unique
+//   blog       Blog     @relation(fields: [blogId], references: [idBlog])
+//   CategoryId Int      @unique
+//   category   Category @relation(fields: [CategoryId], references: [idCategory])
+
+//   created_at DateTime @default(now())
+// }

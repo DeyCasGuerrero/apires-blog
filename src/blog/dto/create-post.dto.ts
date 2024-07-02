@@ -5,11 +5,16 @@ import {
     ArrayNotEmpty,
     IsArray,
     IsDate,
+    IsEmail,
+    IsObject,
     IsOptional,
     IsString,
     MaxLength,
     MinLength,
+    ValidateNested,
 } from 'class-validator';
+
+import { CreateCategoryDto } from 'src/categories/dto/create-category.dto';
 
 export class CreatePost {
     @IsString()
@@ -21,10 +26,14 @@ export class CreatePost {
     @MaxLength(5000)
     content: string;
 
-    // @IsArray()
-    // @ArrayNotEmpty()
-    // @ArrayMinSize(1)
-    // @ArrayMaxSize(5)
-    // categories: String[];
+    @IsObject()
+    @ValidateNested()
+    @Type(() => CreateCategoryDto)
+    categories: CreateCategoryDto;
+
+
+    @IsString()
+    @IsEmail()
+    authorEmail: string;
     
 }
