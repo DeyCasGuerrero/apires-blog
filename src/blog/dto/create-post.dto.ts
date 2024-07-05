@@ -1,13 +1,10 @@
 import { Type } from 'class-transformer';
 import {
-    ArrayMaxSize,
     ArrayMinSize,
-    ArrayNotEmpty,
     IsArray,
-    IsDate,
     IsEmail,
+    IsNotEmpty,
     IsObject,
-    IsOptional,
     IsString,
     MaxLength,
     MinLength,
@@ -20,20 +17,23 @@ export class CreatePost {
     @IsString()
     @MinLength(5)
     @MaxLength(50)
+    @IsNotEmpty()
     title: string;
 
     @IsString()
     @MaxLength(5000)
+    @IsNotEmpty()
     content: string;
 
-    @IsObject()
-    @ValidateNested()
+    @IsArray()
+    @ValidateNested({ each: true })
     @Type(() => CreateCategoryDto)
-    categories: CreateCategoryDto;
+    categories: CreateCategoryDto[];
 
 
     @IsString()
     @IsEmail()
+    @IsNotEmpty()
     authorEmail: string;
     
 }

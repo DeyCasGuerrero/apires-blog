@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePost } from './dto/create-post.dto';
 import { UpdatePost } from './dto/update-post.dto';
 import { PrismaService } from 'src/prisma.service';
+import { CreateCategoryDto } from 'src/categories/dto/create-category.dto';
 
 @Injectable()
 export class BlogService {
 
-    constructor(private prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService) { }
     getPost() {
         return this.prisma.blog.findMany();
     }
@@ -20,21 +21,51 @@ export class BlogService {
     }
 
     async createPost(post: CreatePost) {
+        
+        let emailExists = false;
 
-        // const category = await this.prisma.category.findUnique({
-        //     where: { 
-        //         name: post.categories.name 
-        //     },
-        // });
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    email: post.authorEmail
+                }
+            })
 
+            if(user){
+                emailExists = true;
+            }
+        } catch (error) {
+            throw new BadRequestException('Error checking if email exists', error.message);
+        }
 
-        return this.prisma.blog.create({
-            data: {
-                title: post.title,
-                content: post.content,
-                authorEmail:post.authorEmail,
+        if(!emailExists){
+            throw new BadRequestException('Email does not exist');//when it's !false = true
+        }else{
+            console.log('Email already exists') //when it's !true = false
+        }
+
+        const categoryData = post.categories.map(category => ({
+            category: {
+                connect: {
+                    name: category.name, // Ajusta según tu estructura de datos
+                },
             },
-        });
+        }));
+        
+        try {
+            return await this.prisma.blog.create({
+                data: {
+                    title: post.title,
+                    content: post.content,
+                    authorEmail: post.authorEmail,
+                    // BlogOnCategory:{
+                    //     create: categoryData
+                    // }
+                }
+            });
+        } catch (error) {
+            throw new BadRequestException(error.message, error)
+        }
     }
 
     updatePost(id: string, updatePost: UpdatePost) {

@@ -22,9 +22,10 @@ model Profile {
 }
 
 model User {
-  idUser String @id @default(cuid())
-  email  String @unique
-  name   String
+  idUser String @id @default(cuid()) //clave principal
+  email  String @unique //campo unico
+  name   String 
+  password String
 
   profile Profile?
   Blog    Blog[]
@@ -37,25 +38,27 @@ model Blog {
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  author      User   @relation(fields: [authorEmail], references: [email])
+  author      User   @relation(fields: [authorEmail], references: [email]) //clave foranea usando un campo unico
   authorEmail String
 
-  category Category[] // relación implícita
+  // category       Category[] // relación implícita
+  BlogOnCategory BlogOnCategory[]
 }
 
 model Category {
-  idCategory Int    @id @default(autoincrement())
-  name       String
-  blog       Blog[] // relación implícita
+  idCategory     Int              @id @default(autoincrement())
+  name           String
+  // blog           Blog[] // relación implícita
+  BlogOnCategory BlogOnCategory[]
 }
 
 //relación explicita
 
-// model BlogOnCategory {
-//   blogId     String   @unique
-//   blog       Blog     @relation(fields: [blogId], references: [idBlog])
-//   CategoryId Int      @unique
-//   category   Category @relation(fields: [CategoryId], references: [idCategory])
+model BlogOnCategory {
+  blogId     String // Campo escalar utilizado en el atributo `@relation` arriba
+  blog       Blog     @relation(fields: [blogId], references: [idBlog])
+  categoryId Int // Campo escalar utilizado en el atributo `@relation` arriba
+  category   Category @relation(fields: [categoryId], references: [idCategory])
 
-//   created_at DateTime @default(now())
-// }
+  @@id([blogId, categoryId])
+}
