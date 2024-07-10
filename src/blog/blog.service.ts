@@ -65,13 +65,6 @@ export class BlogService {
             console.log('Email already exists') //when it's !true = false
         }
 
-        const categoryData = post.categories.map(category => ({
-            category: {
-                connect: {
-                    name: category.name, // Ajusta según tu estructura de datos
-                },
-            },
-        }));
 
         try {
             return await this.prisma.blog.create({
