@@ -5,12 +5,25 @@ import { BlogModule } from './blog/blog.module';
 import { ProfileModule } from './profile/profile.module';
 import { CategoriesModule } from './categories/categories.module';
 import { NewsModule } from './news/news.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 
 @Module({
-  imports: [UserModule, AuthModule, BlogModule, ProfileModule, CategoriesModule, NewsModule],
+  imports: [
+    ConfigModule.forRoot({
+      
+      isGlobal:true,
+
+    }),
+    UserModule,
+    AuthModule,
+    BlogModule,
+    ProfileModule,
+    CategoriesModule,
+    NewsModule
+  ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

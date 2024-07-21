@@ -9,11 +9,15 @@ import {
     Put,
     Param,
     Patch,
+    UseGuards,
 } from '@nestjs/common';
 
 import { BlogService } from './blog.service';
 import { CreatePost } from './dto/create-post.dto';
+import { AuthGuard } from '../auth/guard/auth.guard';
+
 @Controller('blog')
+@UseGuards(AuthGuard)
 export class BlogController {
     constructor(private blogService: BlogService) { }
 

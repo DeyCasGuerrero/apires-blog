@@ -52,7 +52,6 @@ export class UserService {
 
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-
     try {
       const dataUpdate = await this.prisma.user.update({
         where: {

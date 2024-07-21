@@ -17,7 +17,7 @@ model Profile {
   idProfile   Int    @id @default(autoincrement())
   description String
 
-  user      User   @relation(fields: [userEmail], references: [email])
+  user      User   @relation(fields: [userEmail], references: [email],onDelete: Cascade)
   userEmail String @unique
 }
 
@@ -42,7 +42,7 @@ model Blog {
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  author      User   @relation(fields: [authorEmail], references: [email]) //clave foranea usando un campo unico
+  author      User   @relation(fields: [authorEmail], references: [email], onDelete: Cascade) //clave foranea usando un campo unico
   authorEmail String
 
   // category       Category[] // relación implícita
@@ -60,9 +60,9 @@ model Category {
 
 model BlogOnCategory {
   blogId     String // Campo escalar utilizado en el atributo `@relation` arriba
-  blog       Blog     @relation(fields: [blogId], references: [idBlog])
+  blog       Blog     @relation(fields: [blogId], references: [idBlog],onDelete: Cascade)
   categoryId Int // Campo escalar utilizado en el atributo `@relation` arriba
-  category   Category @relation(fields: [categoryId], references: [idCategory])
+  category   Category @relation(fields: [categoryId], references: [idCategory],onDelete: Cascade)
 
   @@id([blogId, categoryId])
 }
@@ -85,20 +85,20 @@ model NewsCategory {
 }
 
 model NewsOnCate {
-  news   News @relation(fields: [newsId], references: [idNews])
+  news   News @relation(fields: [newsId], references: [idNews], onDelete: Cascade)
   newsId Int
 
-  newCategory        NewsCategory @relation(fields: [idCategory], references: [idCaNews])
+  newCategory        NewsCategory @relation(fields: [idCategory], references: [idCaNews], onDelete: Cascade)
   idCategory         Int
 
   @@id([newsId, idCategory])
 }
 
 model UserOnNews {
-  author      User   @relation(fields: [authorEmail], references: [email])
+  author      User   @relation(fields: [authorEmail], references: [email], onDelete: Cascade)
   authorEmail String
 
-  news   News @relation(fields: [newsId], references: [idNews])
+  news   News @relation(fields: [newsId], references: [idNews], onDelete: Cascade)
   newsId Int
 
   @@id([authorEmail, newsId])

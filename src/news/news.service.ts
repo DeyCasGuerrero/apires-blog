@@ -89,14 +89,40 @@ export class NewsService {
         }
       })
 
-      
+      const existingCategory = categoriesExists.map((c =>c.idCategory))
+
+      const newCategoryId= updateNewsDto.categories.map(c => c.idCateNews)
+
+
+      const categegoriesToDisconnect = existingCategory.filter(
+        categoryId => !newCategoryId.includes(categoryId)
+      );
+
+      const categoriesToConnect = newCategoryId.filter(
+        categoryId =>!existingCategory.includes(categoryId)
+      );
 
       try {
         return await this.prisma.news.update({
           where:{
             idNews: id,
           },
-          data: updateNewsDto,
+          data:{
+            title:updateNewsDto.title,
+            content:updateNewsDto.content,
+            newsOnCate:{
+              deleteMany:{
+                idCategory:{in:categegoriesToDisconnect}
+              },
+              create:categoriesToConnect.map((categoryId)=>({
+                newCategory:{
+                  connect:{
+                    idCaNews:categoryId,
+                  }
+                }
+              }))
+            }
+          }
         })
       } catch (error) {
         return new BadRequestException(error.code);

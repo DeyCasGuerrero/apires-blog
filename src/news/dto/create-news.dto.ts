@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsInt, IsNotEmpty, IsString, MaxLength, ValidateNested } from "class-validator";
+import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, ValidateNested } from "class-validator";
 import { CateNews } from "./create-catenews.dto";
 import { NewsUserDto } from './create-newuser.dto';
 export class CreateNewsDto {
@@ -15,10 +15,11 @@ export class CreateNewsDto {
     @IsNotEmpty()
     content: string;
 
+    @IsOptional()
     @IsArray()
     @ValidateNested({each: true })
     @Type(()=>CateNews)
-    categories: CateNews[];
+    categories?: CateNews[];
 
     @IsArray()
     @ValidateNested({ each: true })
