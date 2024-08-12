@@ -57,6 +57,19 @@ export class ProfileService {
 
   }
 
+  async findByEmail(email: string) {
+    try {
+      const profileFound = await this.prisma.profile.findUnique({
+        where: {
+          userEmail: email,
+        }
+      })
+      return profileFound;
+    } catch (error) {
+      throw new BadRequestException(error.code, error.message);
+    }
+  }
+
   async update(id: number, updateProfileDto: UpdateProfileDto) {
 
     try {

@@ -13,4 +13,8 @@ export class CreateProfileDto {
     @MaxLength(150)
     description: string;
 
+    @Transform(({value})=> value.trim())
+    @IsString()
+    urlImg: string;
+
 }

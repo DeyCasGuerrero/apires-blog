@@ -15,7 +15,10 @@ datasource db {
 
 model Profile {
   idProfile   Int    @id @default(autoincrement())
-  description String
+
+  description String? 
+  urlImg      String? 
+  
 
   user      User   @relation(fields: [userEmail], references: [email],onDelete: Cascade)
   userEmail String @unique

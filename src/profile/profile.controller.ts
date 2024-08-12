@@ -5,11 +5,12 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @Controller('profile')
-@UseGuards(AuthGuard)
+
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   create(@Body() createProfileDto: CreateProfileDto) {
     return this.profileService.create(createProfileDto);
   }
@@ -24,12 +25,20 @@ export class ProfileController {
     return this.profileService.findOne(+id);
   }
 
+
+  @Get('/bio/:email')
+  findByEmail(@Param('email') email: string) {
+    return this.profileService.findByEmail(email);
+  }
+
   @Patch(':id')
+  @UseGuards(AuthGuard)
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
     return this.profileService.update(+id, updateProfileDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.profileService.remove(+id);
   }

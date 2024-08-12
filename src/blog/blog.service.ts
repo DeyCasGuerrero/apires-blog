@@ -89,6 +89,23 @@ export class BlogService {
         }
     }
 
+    async getPostsByEmail(email:string){
+        try {
+            return await this.prisma.blog.findMany({
+                where:{
+                    authorEmail:email,
+                },
+                include:{
+                    BlogOnCategory: true,
+                    // author:true,
+                }
+            })
+        } catch (error) {
+            throw new BadRequestException('Bad request ', error);
+        }
+        
+    }
+
     async updatePost(id: string, updatePost: UpdatePost) {
 
         try {

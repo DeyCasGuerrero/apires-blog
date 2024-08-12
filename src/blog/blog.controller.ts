@@ -4,9 +4,6 @@ import {
     Get,
     Delete,
     Post,
-    UsePipes,
-    ValidationPipe,
-    Put,
     Param,
     Patch,
     UseGuards,
@@ -17,7 +14,7 @@ import { CreatePost } from './dto/create-post.dto';
 import { AuthGuard } from '../auth/guard/auth.guard';
 
 @Controller('blog')
-@UseGuards(AuthGuard)
+
 export class BlogController {
     constructor(private blogService: BlogService) { }
 
@@ -27,21 +24,30 @@ export class BlogController {
     }
 
     @Get('/byid/:id')
+    @UseGuards(AuthGuard)
     getPostById(@Param('id') id: string) {
         return this.blogService.getPostById(id);
     }
 
+    @Get('/email/:email')
+    getPostsByEmail(@Param('email') email: string) {
+        return this.blogService.getPostsByEmail(email);
+    }
+
     @Post()
+    @UseGuards(AuthGuard)
     CreatePost(@Body() post: CreatePost) {
         return this.blogService.createPost(post);
     }
 
     @Patch(':id')
+    @UseGuards(AuthGuard)
     updatePost(@Param('id') id:string, @Body() post: CreatePost){
         return this.blogService.updatePost(id, post);
     }
 
     @Delete(':id') 
+    @UseGuards(AuthGuard)
     async deletePost(@Param('id') id: string):Promise<{deleted: boolean}> {
         return await this.blogService.deletePost(id);
     }
